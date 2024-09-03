@@ -1,8 +1,10 @@
 import produce from 'immer';
+import { User } from 'models/entities/User';
 import { Reducer } from 'redux';
 import { AuthActionType } from 'store/actions/actions.constants';
 
 export interface AuthState {
+  user?: User;
   userID?: number;
   loading?: boolean;
   error?: string;
@@ -27,7 +29,10 @@ export const authReducer: Reducer<AuthState> = (
         draft.loading = false;
         break;
       }
-      case AuthActionType.LOGIN_COMPLETED:
+      case AuthActionType.LOGIN_COMPLETED: {
+        draft.loading = true;
+        draft.user = action.payload;
+      }
       case AuthActionType.FETCH_ME_COMPLETED: {
         draft.userID = action.payload.id;
         draft.loading = false;

@@ -70,12 +70,14 @@ const LoginPage: FC = () => {
                 className='text-red-500 text-sm mt-1'
               />
             </div>
-            <button
-              type='submit'
-              className='bg-teal text-dark-bg py-2 px-6 rounded-md shadow-medium hover:bg-teal/80 transition duration-300'
-            >
-              Login
-            </button>
+            <Link to='/dashboard'>
+              <button
+                type='submit'
+                className='bg-teal text-dark-bg py-2 px-6 rounded-md shadow-medium hover:bg-teal/80 transition duration-300'
+              >
+                Login
+              </button>
+            </Link>
             <div className='mt-4 text-center'>
               <Link
                 to='/signup'
