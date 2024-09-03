@@ -6,6 +6,24 @@ export interface AuthLoginActionPayloadType {
   email: string;
   password: string;
 }
+export interface AuthSignupActionPayload {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export const authSignupAction = (payload: AuthSignupActionPayload) => ({
+  type: AuthActionType.SIGNUP,
+  payload,
+});
+export const authSignupCompletedAction = (message: string) => ({
+  type: AuthActionType.SIGNUP_COMPLETED,
+  payload: message,
+});
+export const authSignupErrorAction = (message: string) => ({
+  type: AuthActionType.SIGNUP_ERROR,
+  payload: message,
+});
 
 export const authLoginAction = (payload: AuthLoginActionPayloadType) => ({
   type: AuthActionType.LOGIN,

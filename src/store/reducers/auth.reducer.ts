@@ -17,9 +17,14 @@ export const authReducer: Reducer<AuthState> = (
 ) =>
   produce(state, (draft: AuthState) => {
     switch (action.type) {
+      case AuthActionType.SIGNUP:
       case AuthActionType.LOGIN:
       case AuthActionType.FETCH_ME: {
         draft.loading = true;
+        break;
+      }
+      case AuthActionType.SIGNUP_COMPLETED: {
+        draft.loading = false;
         break;
       }
       case AuthActionType.LOGIN_COMPLETED:
@@ -29,6 +34,7 @@ export const authReducer: Reducer<AuthState> = (
         draft.error = undefined;
         break;
       }
+      case AuthActionType.SIGNUP_ERROR:
       case AuthActionType.LOGIN_ERROR:
       case AuthActionType.FETCH_ME_ERROR: {
         draft.loading = false;

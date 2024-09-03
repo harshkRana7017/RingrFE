@@ -18,6 +18,7 @@ export declare type QueryParams = {
 };
 
 const BASE_URL = ENV_CONFIG.BACKEND_URL as string;
+console.log(BASE_URL, "base")
 
 export class BaseApiService {
   private static instance: BaseApiService;

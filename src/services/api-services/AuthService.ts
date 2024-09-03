@@ -13,6 +13,10 @@ class AuthService {
     return baseApiService.post('/login', data, { extras: { useAuth: false } });
   }
 
+  async signup(data: {}) {
+    return baseApiService.post('/signup', data);
+  }
+
   async fetchMe(): Promise<{ user: User }> {
     return baseApiService.get('/me');
   }
