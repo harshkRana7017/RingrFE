@@ -6,6 +6,7 @@ import { authService } from 'services/api-services/AuthService';
 import { localStorageService } from 'services/LocalStorageService';
 import { useDispatch } from 'react-redux';
 import { authLoginAction } from 'store/actions/auth.action';
+import GoogleLoginButton from './GoogleLoginButton';
 
 // Validation schema with Yup
 const validationSchema = Yup.object({
@@ -76,7 +77,7 @@ const LoginPage: FC = () => {
             >
               Login
             </button>
-            <div className='mt-4 text-center'>
+            <div className='mt-4 text-center mb-2'>
               <Link
                 to='/signup'
                 className='text-teal hover:text-teal/80 transition duration-300'
@@ -92,6 +93,10 @@ const LoginPage: FC = () => {
                   Forgot Password?
                 </Link>
               </div>
+            </div>
+            <div className='flex justify-center'>
+              {' '}
+              <GoogleLoginButton />
             </div>
           </Form>
         )}
