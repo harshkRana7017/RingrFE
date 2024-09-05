@@ -18,6 +18,11 @@ export const userReducer: Reducer<UserState> = (
 ) =>
   produce(state, () => {
     switch (action.type) {
+      case AuthActionType.LOGIN_VIA_GOOGLE_COMPLETED: {
+        const user = action.payload.user as User;
+        addOne(state, user);
+        break;
+      }
       case AuthActionType.LOGIN_COMPLETED:
       case AuthActionType.FETCH_ME_COMPLETED: {
         const user = action.payload as User;

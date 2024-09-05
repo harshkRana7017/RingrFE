@@ -13,6 +13,10 @@ class AuthService {
     return baseApiService.post('/login', data, { extras: { useAuth: false } });
   }
 
+  async loginViaGoogle(data: { token: string }) {
+    return baseApiService.post('/auth/google', data);
+  }
+
   async signup(data: {}) {
     return baseApiService.post('/signup', data);
   }
