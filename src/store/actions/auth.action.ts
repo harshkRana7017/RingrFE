@@ -39,6 +39,20 @@ export const authLoginErrorAction = (message: string) => ({
   type: AuthActionType.LOGIN_ERROR,
   payload: message,
 });
+export const authLoginViaGoogleAction = (payload: { token: string }) => ({
+  type: AuthActionType.LOGIN_VIA_GOOGLE,
+  payload,
+});
+
+export const authLoginViaGoogleCompletedAction = (user: User) => ({
+  type: AuthActionType.LOGIN_VIA_GOOGLE_COMPLETED,
+  payload: user,
+});
+
+export const authLoginViaGoogleErrorAction = (message: string) => ({
+  type: AuthActionType.LOGIN_VIA_GOOGLE_ERROR,
+  payload: message,
+});
 
 export const authFetchMeAction = () => ({ type: AuthActionType.FETCH_ME });
 

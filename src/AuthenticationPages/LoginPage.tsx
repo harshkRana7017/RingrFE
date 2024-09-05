@@ -1,12 +1,11 @@
-import React, { FC } from 'react';
-import { Link } from 'react-router-dom';
+import React, { FC, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { authService } from 'services/api-services/AuthService';
-import { localStorageService } from 'services/LocalStorageService';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { authLoginAction } from 'store/actions/auth.action';
 import GoogleLoginButton from './GoogleLoginButton';
+import { userSelector } from 'store/Selectors/UserSelector';
 
 // Validation schema with Yup
 const validationSchema = Yup.object({
@@ -21,6 +20,15 @@ const initialValues = {
 };
 
 const LoginPage: FC = () => {
+  const navigate = useNavigate();
+  const user = useSelector(userSelector);
+
+  useEffect(() => {
+    if (!!user) {
+      navigate('/dashboard');
+    }
+  }, [user]);
+
   const dispatch = useDispatch();
   return (
     <div className='flex flex-col items-center justify-center w-96'>

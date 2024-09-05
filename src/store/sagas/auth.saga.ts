@@ -7,6 +7,8 @@ import {
   AuthLoginActionPayloadType,
   authLoginCompletedAction,
   authLoginErrorAction,
+  authLoginViaGoogleCompletedAction,
+  authLoginViaGoogleErrorAction,
   AuthSignupActionPayload,
   authSignupCompletedAction,
   authSignupErrorAction,
@@ -21,15 +23,32 @@ interface LoginSagaPayloadType extends SagaPayloadType {
 interface SignupSagaPayloadType extends SagaPayloadType {
   payload: AuthSignupActionPayload;
 }
+interface LoginViaGoogleSagaPayloadType extends SagaPayloadType {
+  payload: { token: string };
+}
 
 function* loginSaga(data: LoginSagaPayloadType): any {
   try {
     const response = yield call(authService.login, data.payload);
-    yield put(authLoginCompletedAction(response.user));
-    localStorageService.setAuthToken(response?.token?.token);
+    yield put(authLoginCompletedAction(response));
+    localStorageService.setAuthToken(response?.token);
   } catch (e: any) {
     yield put(
       authLoginErrorAction((e?.errors && e.errors[0]?.message) || e?.message)
+    );
+  }
+}
+
+function* loginViaGoogleSaga(data: LoginViaGoogleSagaPayloadType): any {
+  try {
+    const response = yield call(authService.loginViaGoogle, data.payload);
+    yield put(authLoginViaGoogleCompletedAction(response));
+    localStorageService.setAuthToken(response?.token);
+  } catch (e: any) {
+    yield put(
+      authLoginViaGoogleErrorAction(
+        (e?.errors && e.errors[0]?.message) || e?.message
+      )
     );
   }
 }
@@ -56,6 +75,7 @@ function* authSaga() {
     takeLatest(AuthActionType.LOGIN, loginSaga),
     takeLatest(AuthActionType.FETCH_ME, fetchLoggedInUserSaga),
     takeLatest(AuthActionType.SIGNUP, signupSaga),
+    takeLatest(AuthActionType.LOGIN_VIA_GOOGLE, loginViaGoogleSaga),
   ]);
 }
 

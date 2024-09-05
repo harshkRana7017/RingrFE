@@ -1,8 +1,10 @@
 import produce from 'immer';
+import { User } from 'models/entities/User';
 import { Reducer } from 'redux';
 import { AuthActionType } from 'store/actions/actions.constants';
 
 export interface AuthState {
+  user?: User;
   userID?: number;
   loading?: boolean;
   error?: string;
@@ -18,6 +20,7 @@ export const authReducer: Reducer<AuthState> = (
   produce(state, (draft: AuthState) => {
     switch (action.type) {
       case AuthActionType.SIGNUP:
+      case AuthActionType.LOGIN_VIA_GOOGLE:
       case AuthActionType.LOGIN:
       case AuthActionType.FETCH_ME: {
         draft.loading = true;
@@ -27,13 +30,16 @@ export const authReducer: Reducer<AuthState> = (
         draft.loading = false;
         break;
       }
+      case AuthActionType.LOGIN_VIA_GOOGLE_COMPLETED:
       case AuthActionType.LOGIN_COMPLETED:
       case AuthActionType.FETCH_ME_COMPLETED: {
-        draft.userID = action.payload.id;
+        draft.user = action.payload.user;
+        draft.userID = action.payload;
         draft.loading = false;
         draft.error = undefined;
         break;
       }
+      case AuthActionType.LOGIN_VIA_GOOGLE_ERROR:
       case AuthActionType.SIGNUP_ERROR:
       case AuthActionType.LOGIN_ERROR:
       case AuthActionType.FETCH_ME_ERROR: {
