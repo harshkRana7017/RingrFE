@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 const DashboardPage: React.FC = () => {
   const user = { username: 'harsh', email: '123' };
   return (
-    <div className='flex flex-col items-center justify-center w-full  bg-neutral1'>
+    <div className='flex flex-col items-center justify-center w-full  bg-neutral1 '>
       <div className='p-6 max-w-4xl mx-auto bg-white shadow-md rounded-md w-full'>
         <h2 className='text-3xl font-bold text-primary1 mb-4'>
           Welcome, {user?.username}!
@@ -19,7 +19,7 @@ const DashboardPage: React.FC = () => {
             to='/settings'
             className='bg-teal text-dark-bg py-2 px-6 rounded-md shadow-medium hover:bg-teal/80 transition duration-300'
           >
-            Settings
+            Start Ring
           </Link>
           <Link
             to='/logout'
