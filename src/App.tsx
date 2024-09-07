@@ -1,5 +1,5 @@
 import LandingPage from 'LandingPage';
-import Layout from 'Layout';
+import Layout from 'Layouts/Layout';
 import LoginPage from 'AuthenticationPages/LoginPage';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -8,6 +8,8 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import store from 'store';
 import ForgotPasswordPage from 'AuthenticationPages/ForgotPasswordPage';
 import SignupPage from 'AuthenticationPages/SignUpPage';
+import DashboardPage from 'AuthenticationPages/DashboardPage';
+import DashboardLayout from 'Layouts/DashboardLayout';
 
 const App: React.FC = () => {
   const client_id =
@@ -23,6 +25,9 @@ const App: React.FC = () => {
               <Route path='/signup' element={<SignupPage />} />
               <Route path='forgot-password' element={<ForgotPasswordPage />} />
               <Route path='*' element={<LandingPage />} />
+            </Route>
+            <Route path='/dashboard' element={<DashboardLayout />}>
+              <Route path='' element={<DashboardPage />} />
             </Route>
           </Routes>
         </Router>

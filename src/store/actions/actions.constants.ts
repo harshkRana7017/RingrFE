@@ -16,3 +16,9 @@ export enum AuthActionType {
   SIGNUP_COMPLETED = 'auth/signup/completed',
   SIGNUP_ERROR = 'auth/signup/error',
 }
+
+export enum CallActionType {
+  CREATE_CALL ='call/create',
+  CREATE_CALL_COMPLETED = 'call/create/completed',
+  CREATE_CALL_ERROR = 'cakk/create/error',
+}
