@@ -1,9 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import Button from 'shared-resources/components/Button/Button';
+import { createCallAction } from 'store/actions/call.action';
 
 const DashboardPage: React.FC = () => {
   const user = { username: 'harsh', email: '123' };
+  const dispatch = useDispatch();
+  const startCall = () => {
+    dispatch(
+      createCallAction({
+        is_private_call: false,
+      })
+    );
+  };
   return (
     <div className='flex flex-col items-center justify-center w-full  bg-neutral1 '>
       <div className='p-6 max-w-4xl mx-auto bg-white shadow-md rounded-md w-full'>
@@ -15,15 +25,15 @@ const DashboardPage: React.FC = () => {
           <p className='text-gray-text'>Email: {user?.email}</p>
         </div>
         <div className='flex space-x-4'>
-          <Link
-            to='/settings'
+          <Button
+            onClick={startCall}
             className='bg-teal text-dark-bg py-2 px-6 rounded-md shadow-medium hover:bg-teal/80 transition duration-300'
           >
             Start Ring
-          </Link>
+          </Button>
           <Link
             to='/logout'
-            className='bg-red-500 text-white py-2 px-6 rounded-md shadow-medium hover:bg-red-600 transition duration-300'
+            className='bg-red-500 text-white py-2 px-6 rounded-md shadow-medium hover:bg-red-600 transition duration-300 tex'
           >
             Logout
           </Link>
