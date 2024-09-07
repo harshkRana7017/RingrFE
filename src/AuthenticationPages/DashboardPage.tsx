@@ -10,7 +10,7 @@ const DashboardPage: React.FC = () => {
   const startCall = () => {
     dispatch(
       createCallAction({
-        is_private_call: false,
+        is_call_private: false,
       })
     );
   };
