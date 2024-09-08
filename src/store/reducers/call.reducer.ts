@@ -20,14 +20,17 @@ export const callReducer: Reducer<CallState> = (
     switch (action.type) {
       case CallActionType.CREATE_CALL: {
         draft.loading = true;
+        break;
       }
       case CallActionType.CREATE_CALL_COMPLETED: {
         const { call } = action.payload;
         draft.calls[call.call_id] = call;
         draft.loading = false;
+        break;
       }
       case CallActionType.CREATE_CALL_ERROR: {
         draft.loading = false;
+        break;
       }
     }
   });
