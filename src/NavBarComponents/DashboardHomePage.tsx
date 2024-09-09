@@ -8,12 +8,15 @@ import {
   currentCallIdSelector,
 } from 'store/Selectors/CallSelector';
 import { userSelector } from 'store/Selectors/UserSelector';
+import { localStorageService } from 'services/LocalStorageService';
+import { logout } from 'utils/AuthUtils';
 
 const DashboardPage: React.FC = () => {
   const user = useSelector(userSelector);
   const dispatch = useDispatch();
   const calls = useSelector(callsSelector);
   const currentCallId = useSelector(currentCallIdSelector);
+  const authToken = localStorageService.getAuthToken();
 
   // State to manage the call progress and the timer
   const [callInProgress, setCallInProgress] = useState(false);
@@ -25,8 +28,10 @@ const DashboardPage: React.FC = () => {
         is_call_private: false,
       })
     );
-    setCallInProgress(true); // Set call as in progress
-    setTimer(0); // Reset timer when the call starts
+    if (authToken) {
+      setCallInProgress(true); // Set call as in progress
+      setTimer(0); // Reset timer when the call starts
+    }
   };
 
   const endCall = () => {
@@ -100,12 +105,19 @@ const DashboardPage: React.FC = () => {
               End Ring
             </Button>
           )}
-          <Link
-            to='/logout'
-            className='bg-red-500 text-white py-2 px-6 rounded-md shadow-medium hover:bg-red-600 transition duration-300'
+          <Button
+            onClick={() => {
+              logout();
+            }}
+            className='bg-red-600'
           >
-            Logout
-          </Link>
+            <Link
+              to='/logout'
+              className=' text-white py-2 px-6 rounded-md shadow-medium hover:bg-red-600 transition duration-300'
+            >
+              Logout
+            </Link>
+          </Button>
         </div>
       </div>
     </div>
