@@ -25,4 +25,8 @@ export enum CallActionType {
   END_CALL = 'call/end',
   END_CALL_COMPLETED = 'call/end/completed',
   END_CALL_ERROR = 'call/end/error',
+
+  GET_HOSTED_CALLS = 'get/hosted/calls',
+  GET_HOSTED_CALLS_COMPLETED = 'get/hosted/calls/completed',
+  GET_HOSTED_CALLS_ERROR = 'get/hosted/calls/error',
 }

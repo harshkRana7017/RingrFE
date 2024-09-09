@@ -9,6 +9,10 @@ import {
   endCallErrorPayload,
   endCallPayload,
 } from 'models/apiPayloads/endCall';
+import {
+  getHostedCallsCompletedPayload,
+  getHostedCallsErrorPayload,
+} from 'models/apiPayloads/getHostedCalls';
 
 export const createCallAction = (payload: createCallPayload) => ({
   type: CallActionType.CREATE_CALL,
@@ -38,4 +42,19 @@ export const endCallCompletedAction = (payload: endCallCompletePayload) => ({
 export const endCallErrorAction = (payload: endCallErrorPayload) => ({
   type: CallActionType.END_CALL_ERROR,
   payload,
+});
+
+export const getHostedCallsAction = () => ({
+  type: CallActionType.GET_HOSTED_CALLS,
+});
+export const getHostedCallsCompletedAction = (
+  payload: getHostedCallsCompletedPayload
+) => ({
+  type: CallActionType.GET_HOSTED_CALLS_COMPLETED,
+  payload,
+});
+export const getHostedCallsErrorAction = (
+  payload: getHostedCallsErrorPayload
+) => ({
+  type: CallActionType.GET_HOSTED_CALLS_ERROR,
 });

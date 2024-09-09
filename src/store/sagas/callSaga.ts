@@ -7,6 +7,8 @@ import {
   createCallCompletedAction,
   endCallCompletedAction,
   endCallErrorAction,
+  getHostedCallsCompletedAction,
+  getHostedCallsErrorAction,
 } from 'store/actions/call.action';
 import { SagaPayloadType } from 'types/SagaPayload.type';
 
@@ -35,11 +37,21 @@ function* endCallSaga(data: EndCallSagaPayloadType): any {
     yield put(endCallErrorAction(e));
   }
 }
+function* getHostedCallSaga(): any {
+  try {
+    const response = yield call(callService.getHostedCalls);
+    yield put(getHostedCallsCompletedAction(response));
+  } catch (e: any) {
+    console.error(e?.message);
+    yield put(getHostedCallsErrorAction(e));
+  }
+}
 
 function* callSaga() {
   yield all([
     takeLatest(CallActionType.CREATE_CALL, createCallSaga),
     takeLatest(CallActionType.END_CALL, endCallSaga),
+    takeLatest(CallActionType.GET_HOSTED_CALLS, getHostedCallSaga),
   ]);
 }
 

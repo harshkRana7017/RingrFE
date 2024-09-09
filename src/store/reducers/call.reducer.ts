@@ -32,6 +32,14 @@ export const callReducer: Reducer<CallState> = (
         draft.loading = false;
         break;
       }
+      case CallActionType.GET_HOSTED_CALLS_COMPLETED: {
+        const calls = action.payload as Call[];
+        calls?.forEach((call: Call) => {
+          draft.calls[call.call_id] = call;
+        });
+        break;
+      }
+
       case CallActionType.END_CALL_ERROR:
       case CallActionType.CREATE_CALL_ERROR: {
         draft.loading = false;
