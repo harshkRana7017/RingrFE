@@ -8,7 +8,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import store from 'store';
 import ForgotPasswordPage from 'AuthenticationPages/ForgotPasswordPage';
 import SignupPage from 'AuthenticationPages/SignUpPage';
-import DashboardPage from 'AuthenticationPages/DashboardPage';
+import DashboardPage from 'NavBarComponents/DashboardHomePage';
 import DashboardLayout from 'Layouts/DashboardLayout';
 
 const App: React.FC = () => {
