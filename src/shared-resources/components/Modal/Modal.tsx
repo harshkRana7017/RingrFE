@@ -42,7 +42,6 @@ const Modal: React.FC<ModalProps> = (props: ModalProps) => {
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <Dialog.Overlay className='fixed inset-0' />
           </Transition.Child>
 
           {/* This element is to trick the browser into centering the modal contents. */}
