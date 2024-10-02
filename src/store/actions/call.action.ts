@@ -60,13 +60,13 @@ export const getHostedCallsErrorAction = (
 });
 
 export const getScheduledCallsAction = () => ({
-  type: CallActionType.GET_HOSTED_CALLS,
+  type: CallActionType.GET_SCHEDULED_CALLS,
 });
 
 export const getScheduledCallsCompletedAction = (
   payload: getHostedCallsCompletedPayload
 ) => ({
-  type: CallActionType.GET_SCHEDULED_CALLS,
+  type: CallActionType.GET_SCHEDULED_CALLS_COMPLETED,
   payload,
 });
 
