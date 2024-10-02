@@ -16,6 +16,8 @@ const CallHistoryPage: FC<CallHistoryPageProps> = (props) => {
 
   return (
     <>
+      {' '}
+      <h1 style={{ fontSize: '30px' }}> Call History</h1>
       {calls.map((call) =>
         call.ended_at ? (
           <CallHistoryCard

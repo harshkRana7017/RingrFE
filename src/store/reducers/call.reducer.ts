@@ -32,6 +32,7 @@ export const callReducer: Reducer<CallState> = (
         draft.loading = false;
         break;
       }
+      case CallActionType.GET_SCHEDULED_CALLS:
       case CallActionType.GET_HOSTED_CALLS_COMPLETED: {
         const calls = action.payload as Call[];
         calls?.forEach((call: Call) => {
@@ -39,7 +40,8 @@ export const callReducer: Reducer<CallState> = (
         });
         break;
       }
-
+      case CallActionType.GET_SCHEDULED_CALLS_COMPLETED:
+      case CallActionType.GET_SCHEDULED_CALLS_ERROR:
       case CallActionType.END_CALL_ERROR:
       case CallActionType.CREATE_CALL_ERROR: {
         draft.loading = false;

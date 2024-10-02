@@ -10,6 +10,7 @@ const ScheduledCallsPage: FC<ScheduledCallsPageProps> = (props) => {
 
   return (
     <>
+    <h1 style={{fontSize:'30px'}}>Scheduled Calls</h1>
       {calls.map((call) =>
         call.scheduled_at ? (
           <ScheduledCallCard

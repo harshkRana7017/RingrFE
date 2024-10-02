@@ -1,5 +1,6 @@
 import { baseApiService } from './BaseApiService';
 import { User } from '../../models/entities/User';
+import { forgotPassPayload } from 'models/apiPayloads/Auth/forgotPass';
 
 class AuthService {
   static getInstance(): AuthService {
@@ -23,6 +24,10 @@ class AuthService {
 
   async fetchMe(): Promise<{ user: User }> {
     return baseApiService.get('/me');
+  }
+
+  async forgotPass(data: forgotPassPayload): Promise<{}> {
+    return baseApiService.post('/forgot-password', data);
   }
 }
 

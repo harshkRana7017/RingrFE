@@ -1,5 +1,5 @@
-import { createCallPayload } from 'models/apiPayloads/createCall';
-import { endCallPayload } from 'models/apiPayloads/endCall';
+import { createCallPayload } from 'models/apiPayloads/Calls/createCall';
+import { endCallPayload } from 'models/apiPayloads/Calls/endCall';
 import { put, call, all, takeLatest } from 'redux-saga/effects';
 import { callService } from 'services/api-services/CallService';
 import { CallActionType } from 'store/actions/actions.constants';
@@ -46,12 +46,22 @@ function* getHostedCallSaga(): any {
     yield put(getHostedCallsErrorAction(e));
   }
 }
+function* getScheduledCallsSaga(): any {
+  try {
+    const response = yield call(callService.getScheduledCalls);
+    yield put(getHostedCallsCompletedAction(response));
+  } catch (e: any) {
+    console.error(e?.message);
+    yield put(getHostedCallsErrorAction(e));
+  }
+}
 
 function* callSaga() {
   yield all([
     takeLatest(CallActionType.CREATE_CALL, createCallSaga),
     takeLatest(CallActionType.END_CALL, endCallSaga),
     takeLatest(CallActionType.GET_HOSTED_CALLS, getHostedCallSaga),
+    takeLatest(CallActionType.GET_SCHEDULED_CALLS, getScheduledCallsSaga),
   ]);
 }
 
