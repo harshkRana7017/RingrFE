@@ -22,11 +22,13 @@ const ScheduleCallModal: FC<ScheduleCallModalProps> = ({
 }) => {
   const dispatch = useDispatch();
   const [topic, setTopic] = useState('');
+  const [callMember, setCallMember] = useState('');
   const [scheduledDate, setScheduledDate] = useState(new Date());
   const [scheduledTime, setScheduledTime] = useState(new Date());
   const [isFocused, setIsFocused] = useState(false);
 
   const handleTopicChange = (e: any) => setTopic(e.target.value);
+  const handleCallMemberChange = (e: any) => setCallMember(e.target.value);
   const handleScheduledDateChange = (date: any) => {
     setScheduledDate(new Date(date));
   };
@@ -55,7 +57,11 @@ const ScheduleCallModal: FC<ScheduleCallModalProps> = ({
     const timeStamp = combineDateAndTime();
     if (timeStamp) {
       dispatch(
-        createCallAction({ is_call_private: true, scheduled_at: timeStamp })
+        createCallAction({
+          is_call_private: true,
+          scheduled_at: timeStamp,
+          member_emails: [callMember],
+        })
       );
     }
     handleClose(false);
@@ -131,6 +137,14 @@ const ScheduleCallModal: FC<ScheduleCallModalProps> = ({
               />
             </div>
           </div>
+          <TextField
+            label='Add Call Member'
+            value={callMember}
+            onChange={handleCallMemberChange}
+            fullWidth
+            margin='dense'
+            style={{ marginTop: '30px' }}
+          />
         </div>
         <Button variant='contained' onClick={onClick}>
           Schedule Meet

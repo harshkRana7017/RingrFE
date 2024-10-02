@@ -32,6 +32,14 @@ const DashboardLayout: FC = () => {
               <ul className='space-y-6'>
                 <li>
                   <Link
+                    to='/dashboard'
+                    className=' bg-teal  block text-lg hover:bg-neutral1 hover:text-primary1 py-2 px-4 rounded-md transition duration-200'
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     to='/dashboard/schedules'
                     className=' bg-teal  block text-lg hover:bg-neutral1 hover:text-primary1 py-2 px-4 rounded-md transition duration-200'
                   >
