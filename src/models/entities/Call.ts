@@ -1,6 +1,6 @@
 export interface Call {
-  call_id: string | number;
-  host_id: string | number;
+  call_id: number;
+  host_id: number;
   scheduled_at: Date;
   started_at: Date;
   ended_at: Date;

@@ -1,23 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+//redux
 import { useDispatch, useSelector } from 'react-redux';
-import Button from 'shared-resources/components/Button/Button';
 import { createCallAction, endCallAction } from 'store/actions/call.action';
 import {
   callsSelector,
   currentCallIdSelector,
 } from 'store/Selectors/CallSelector';
 import { userSelector } from 'store/Selectors/UserSelector';
+//services
+import { localStorageService } from 'services/LocalStorageService';
+//components
+import Button from 'shared-resources/components/Button/Button';
+//helpers
+import { logout } from 'utils/AuthUtils';
+//icons
+import { BsCalendar2DateFill } from 'react-icons/bs';
+import ScheduleCallModal from './ScheduleCallModal';
+
+// import ScheduleCallModal from './ScheduleCallModal';
 
 const DashboardPage: React.FC = () => {
   const user = useSelector(userSelector);
   const dispatch = useDispatch();
   const calls = useSelector(callsSelector);
   const currentCallId = useSelector(currentCallIdSelector);
+  const authToken = localStorageService.getAuthToken();
 
   // State to manage the call progress and the timer
   const [callInProgress, setCallInProgress] = useState(false);
   const [timer, setTimer] = useState(0);
+  const [showDateSelector, setShowDateSelector] = useState(false);
 
   const startCall = () => {
     dispatch(
@@ -25,8 +38,10 @@ const DashboardPage: React.FC = () => {
         is_call_private: false,
       })
     );
-    setCallInProgress(true); // Set call as in progress
-    setTimer(0); // Reset timer when the call starts
+    if (authToken) {
+      setCallInProgress(true); // Set call as in progress
+      setTimer(0); // Reset timer when the call starts
+    }
   };
 
   const endCall = () => {
@@ -66,7 +81,7 @@ const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center w-full bg-neutral1'>
+    <div className='flex flex-col items-start justify-center w-full bg-neutral1 gap-20'>
       <div className='p-6 max-w-4xl mx-auto bg-white shadow-md rounded-md w-full'>
         <h2 className='text-3xl font-bold text-primary1 mb-4'>
           Welcome, {user?.username}!
@@ -100,13 +115,41 @@ const DashboardPage: React.FC = () => {
               End Ring
             </Button>
           )}
-          <Link
-            to='/logout'
-            className='bg-red-500 text-white py-2 px-6 rounded-md shadow-medium hover:bg-red-600 transition duration-300'
+          <Button
+            onClick={() => {
+              logout();
+            }}
+            className='!bg-red-600 '
           >
-            Logout
-          </Link>
+            <Link
+              to='/logout'
+              className=' text-white py-2 px-6 rounded-md shadow-medium transition duration-300'
+            >
+              Logout
+            </Link>
+          </Button>
         </div>
+      </div>
+
+      <div className='border-2 p-12 shadow-md rounded-md mx-auto flex flex-col items-center'>
+        <h1 className='ext-3xl font-bold text-primary1 mb-4 '>Schedule Call</h1>
+        <Button
+          className='hover:bg-teal/80 '
+          onClick={() => {
+            setShowDateSelector(true);
+          }}
+        >
+          {' '}
+          <BsCalendar2DateFill fontSize={52} color='white' />
+        </Button>
+        {showDateSelector && (
+          <ScheduleCallModal
+            open={showDateSelector}
+            handleClose={() => {
+              setShowDateSelector(false);
+            }}
+          />
+        )}
       </div>
     </div>
   );

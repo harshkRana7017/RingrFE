@@ -12,9 +12,11 @@ import {
   AuthSignupActionPayload,
   authSignupCompletedAction,
   authSignupErrorAction,
+  forgotPasswordCompletedAction,
 } from 'store/actions/auth.action';
 import { authService } from 'services/api-services/AuthService';
 import { localStorageService } from 'services/LocalStorageService';
+import { forgotPassPayload } from 'models/apiPayloads/Auth/forgotPass';
 
 interface LoginSagaPayloadType extends SagaPayloadType {
   payload: AuthLoginActionPayloadType;
@@ -26,7 +28,9 @@ interface SignupSagaPayloadType extends SagaPayloadType {
 interface LoginViaGoogleSagaPayloadType extends SagaPayloadType {
   payload: { token: string };
 }
-
+interface ForgotPassSagaPayloadType extends SagaPayloadType {
+  payload: forgotPassPayload;
+}
 function* loginSaga(data: LoginSagaPayloadType): any {
   try {
     const response = yield call(authService.login, data.payload);
@@ -70,12 +74,21 @@ function* fetchLoggedInUserSaga(): any {
   }
 }
 
+function* forgotPassWordSaga(data: ForgotPassSagaPayloadType): any {
+  try {
+    const response = authService.forgotPass(data.payload);
+  } catch (e: any) {
+    yield put(forgotPasswordCompletedAction());
+  }
+}
+
 function* authSaga() {
   yield all([
     takeLatest(AuthActionType.LOGIN, loginSaga),
     takeLatest(AuthActionType.FETCH_ME, fetchLoggedInUserSaga),
     takeLatest(AuthActionType.SIGNUP, signupSaga),
     takeLatest(AuthActionType.LOGIN_VIA_GOOGLE, loginViaGoogleSaga),
+    takeLatest(AuthActionType.FORGOT_PASSWORD, forgotPassWordSaga),
   ]);
 }
 

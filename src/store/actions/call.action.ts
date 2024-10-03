@@ -1,14 +1,18 @@
 import {
+  createCallPayload,
   createCallCompletePayload,
   createCallErrorPayload,
-  createCallPayload,
-} from 'models/apiPayloads/createCall';
+} from 'models/apiPayloads/Calls/createCall';
+import {
+  getHostedCallsCompletedPayload,
+  getHostedCallsErrorPayload,
+} from 'models/apiPayloads/Calls/getHostedCalls';
 import { CallActionType } from './actions.constants';
 import {
   endCallCompletePayload,
   endCallErrorPayload,
   endCallPayload,
-} from 'models/apiPayloads/endCall';
+} from 'models/apiPayloads/Calls/endCall';
 
 export const createCallAction = (payload: createCallPayload) => ({
   type: CallActionType.CREATE_CALL,
@@ -38,4 +42,34 @@ export const endCallCompletedAction = (payload: endCallCompletePayload) => ({
 export const endCallErrorAction = (payload: endCallErrorPayload) => ({
   type: CallActionType.END_CALL_ERROR,
   payload,
+});
+
+export const getHostedCallsAction = () => ({
+  type: CallActionType.GET_HOSTED_CALLS,
+});
+export const getHostedCallsCompletedAction = (
+  payload: getHostedCallsCompletedPayload
+) => ({
+  type: CallActionType.GET_HOSTED_CALLS_COMPLETED,
+  payload,
+});
+export const getHostedCallsErrorAction = (
+  payload: getHostedCallsErrorPayload
+) => ({
+  type: CallActionType.GET_HOSTED_CALLS_ERROR,
+});
+
+export const getScheduledCallsAction = () => ({
+  type: CallActionType.GET_HOSTED_CALLS,
+});
+
+export const getScheduledCallsCompletedAction = (
+  payload: getHostedCallsCompletedPayload
+) => ({
+  type: CallActionType.GET_SCHEDULED_CALLS,
+  payload,
+});
+
+export const getScheduledCallsErrorAction = () => ({
+  type: CallActionType.GET_SCHEDULED_CALLS_ERROR,
 });

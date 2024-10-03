@@ -10,6 +10,8 @@ import ForgotPasswordPage from 'AuthenticationPages/ForgotPasswordPage';
 import SignupPage from 'AuthenticationPages/SignUpPage';
 import DashboardPage from 'NavBarComponents/DashboardHomePage';
 import DashboardLayout from 'Layouts/DashboardLayout';
+import CallHistoryPage from 'NavBarComponents/CallHistoryPage';
+import ScheduledCallsPage from 'NavBarComponents/ScheduledCallsPage';
 
 const App: React.FC = () => {
   const client_id =
@@ -28,6 +30,8 @@ const App: React.FC = () => {
             </Route>
             <Route path='/dashboard' element={<DashboardLayout />}>
               <Route path='' element={<DashboardPage />} />
+              <Route path='history' element={<CallHistoryPage />} />
+              <Route path='schedules' element={<ScheduledCallsPage />} />
             </Route>
           </Routes>
         </Router>

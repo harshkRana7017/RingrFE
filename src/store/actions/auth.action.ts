@@ -1,5 +1,6 @@
 import { User } from 'models/entities/User';
 import { AuthActionType } from './actions.constants';
+import { forgotPassPayload } from 'models/apiPayloads/Auth/forgotPass';
 
 // TODO: MOVE TO SPECIFIC TYPE FILE
 export interface AuthLoginActionPayloadType {
@@ -63,5 +64,35 @@ export const authFetchMeCompletedAction = (user: User) => ({
 
 export const authFetchMeErrorAction = (message: string) => ({
   type: AuthActionType.FETCH_ME_ERROR,
+  payload: message,
+});
+
+// Forgot Password Actions
+export const forgotPasswordAction = (email: forgotPassPayload) => ({
+  type: AuthActionType.FORGOT_PASSWORD,
+  payload: email,
+});
+
+export const forgotPasswordCompletedAction = () => ({
+  type: AuthActionType.FORGOT_PASSWORD_COMPLETED,
+});
+
+export const forgotPasswordErrorAction = (message: string) => ({
+  type: AuthActionType.FORGOT_PASSWORD_ERROR,
+  payload: message,
+});
+
+//Reset Password Actions 
+export const resetPasswordAction = (newPassword: string, token: string) => ({
+  type: AuthActionType.RESET_PASSWORD,
+  payload: { newPassword, token },
+});
+
+export const resetPasswordCompletedAction = () => ({
+  type: AuthActionType.RESET_PASSWORD_COMPLETED,
+});
+
+export const resetPasswordErrorAction = (message: string) => ({
+  type: AuthActionType.RESET_PASSWORD_ERROR,
   payload: message,
 });
