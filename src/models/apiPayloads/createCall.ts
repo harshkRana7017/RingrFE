@@ -1,7 +1,7 @@
 import { Call } from 'models/entities/Call';
 
 export type createCallPayload = {
-  is_private_call: boolean;
+  is_call_private: boolean;
 };
 
 export type createCallCompletePayload = {
@@ -12,3 +12,4 @@ export type createCallCompletePayload = {
 export type createCallErrorPayload = {
   message: string;
 };
+

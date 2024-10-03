@@ -1,12 +1,20 @@
 import { createCallPayload } from 'models/apiPayloads/createCall';
+import { endCallPayload } from 'models/apiPayloads/endCall';
 import { put, call, all, takeLatest } from 'redux-saga/effects';
 import { callService } from 'services/api-services/CallService';
 import { CallActionType } from 'store/actions/actions.constants';
-import { createCallCompletedAction } from 'store/actions/call.action';
+import {
+  createCallCompletedAction,
+  endCallCompletedAction,
+  endCallErrorAction,
+} from 'store/actions/call.action';
 import { SagaPayloadType } from 'types/SagaPayload.type';
 
 interface CreateCallSagaPayloadType extends SagaPayloadType {
   payload: createCallPayload;
+}
+interface EndCallSagaPayloadType extends SagaPayloadType {
+  payload: endCallPayload;
 }
 
 function* createCallSaga(data: CreateCallSagaPayloadType): any {
@@ -18,8 +26,21 @@ function* createCallSaga(data: CreateCallSagaPayloadType): any {
   }
 }
 
-function* callSaga() {
-  yield all([takeLatest(CallActionType.CREATE_CALL, createCallSaga)]);
+function* endCallSaga(data: EndCallSagaPayloadType): any {
+  try {
+    const response = yield call(callService.endCall, data.payload);
+    yield put(endCallCompletedAction(response));
+  } catch (e: any) {
+    console.error(e?.message);
+    yield put(endCallErrorAction(e));
+  }
 }
 
-export default callSaga
+function* callSaga() {
+  yield all([
+    takeLatest(CallActionType.CREATE_CALL, createCallSaga),
+    takeLatest(CallActionType.END_CALL, endCallSaga),
+  ]);
+}
+
+export default callSaga;

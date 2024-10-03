@@ -4,5 +4,5 @@ export interface Call {
   scheduled_at: Date;
   started_at: Date;
   ended_at: Date;
-  is_call_private: Boolean;
+  is_call_private: boolean;
 }

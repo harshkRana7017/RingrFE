@@ -18,7 +18,11 @@ export enum AuthActionType {
 }
 
 export enum CallActionType {
-  CREATE_CALL ='call/create',
+  CREATE_CALL = 'call/create',
   CREATE_CALL_COMPLETED = 'call/create/completed',
   CREATE_CALL_ERROR = 'cakk/create/error',
+
+  END_CALL = 'call/end',
+  END_CALL_COMPLETED = 'call/end/completed',
+  END_CALL_ERROR = 'call/end/error',
 }
