@@ -33,7 +33,7 @@ export const authReducer: Reducer<AuthState> = (
         break;
       }
       case AuthActionType.IS_USER_EMAIL_COMPLETED: {
-        draft.loading = true;
+        draft.loading = false;
         draft.isUserEmail = action.payload;
         break;
       }
@@ -46,7 +46,11 @@ export const authReducer: Reducer<AuthState> = (
         draft.error = undefined;
         break;
       }
-      case AuthActionType.IS_USER_EMAIL_ERROR:
+      case AuthActionType.IS_USER_EMAIL_ERROR: {
+        draft.loading = false;
+
+        break;
+      }
       case AuthActionType.LOGIN_VIA_GOOGLE_ERROR:
       case AuthActionType.SIGNUP_ERROR:
       case AuthActionType.LOGIN_ERROR:

@@ -15,7 +15,7 @@ const AttendeesList: FC<AttendeesListType> = ({ attendees }) => {
     <div>
       {/* Div that shows the length of the attendees array */}
       <div onClick={toggleAttendees} style={styles.attendeesHeader}>
-        Attendees ({attendees.length})
+        {attendees.length} Attendees
       </div>
 
       {/* Conditionally render the attendees list */}

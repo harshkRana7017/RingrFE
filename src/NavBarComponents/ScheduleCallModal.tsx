@@ -6,7 +6,7 @@ import {
   TextField,
 } from '@mui/material';
 import { getTime } from 'date-fns';
-import React, { FC, memo, useEffect, useState } from 'react';
+import React, { FC, memo } from 'react';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +17,9 @@ import {
   isUserloadingSelector,
 } from 'store/Selectors/UserSelector';
 import AttendeesList from './AttendeeList';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+
 type ScheduleCallModalProps = {
   open: boolean;
   handleClose: (closE: boolean) => void;
@@ -27,170 +30,216 @@ const ScheduleCallModal: FC<ScheduleCallModalProps> = ({
   open,
 }) => {
   const dispatch = useDispatch();
-  const [topic, setTopic] = useState('');
-  const [callMember, setCallMember] = useState<any[]>([]);
-  const [currentCallMember, setCurrentCallMember] = useState('');
-  const [scheduledDate, setScheduledDate] = useState(new Date());
-  const [scheduledTime, setScheduledTime] = useState(new Date());
-  const [isFocused, setIsFocused] = useState(false);
   const isEmail = useSelector(isUserEmailSelector);
   const isLoading = useSelector(isUserloadingSelector);
 
-  const handleTopicChange = (e: any) => setTopic(e.target.value);
-  const handleCallMemberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentCallMember(e.target.value);
+  const initialValues = {
+    topic: '',
+    callMember: '',
+    scheduledDate: new Date(),
+    scheduledTime: new Date(),
   };
 
-  const validateAndAddCallMember = () => {
-    dispatch(isUserEmailAction(currentCallMember));
+  const validationSchema = Yup.object().shape({
+    topic: Yup.string().required('Topic is required'),
+    callMember: Yup.string()
+      .email('Invalid email')
+      .required('Email is required'),
+    scheduledDate: Yup.date().required('Date is required'),
+    scheduledTime: Yup.date().required('Time is required'),
+  });
+
+  const combineDateAndTime = (scheduledDate: Date, scheduledTime: Date) => {
+    const combinedDateTime = new Date(
+      scheduledDate.getFullYear(),
+      scheduledDate.getMonth(),
+      scheduledDate.getDate(),
+      scheduledTime.getHours(),
+      scheduledTime.getMinutes(),
+      scheduledTime.getSeconds()
+    );
+    return getTime(combinedDateTime);
   };
 
-  const handleScheduledDateChange = (date: any) => {
-    setScheduledDate(new Date(date));
-  };
-  const handleScheduledTimeChange = (time: any) => {
-    setScheduledTime(new Date(time));
-  };
-
-  const combineDateAndTime = () => {
-    if (scheduledDate && scheduledTime) {
-      const combinedDateTime = new Date(
-        scheduledDate.getFullYear(),
-        scheduledDate.getMonth(),
-        scheduledDate.getDate(),
-        scheduledTime.getHours(),
-        scheduledTime.getMinutes(),
-        scheduledTime.getSeconds()
-      );
-
-      const combinedTimestamp = getTime(combinedDateTime);
-      return combinedTimestamp;
-    }
-    return null;
-  };
-
-  useEffect(() => {
-    if (!isLoading && isEmail) {
-      setCallMember((prev) => [...prev, currentCallMember]);
-    }
-  }, [isEmail, isLoading]);
-
-  const onClick = () => {
-    const timeStamp = combineDateAndTime();
+  const onSubmit = (values: any, { resetForm }: any) => {
+    const timeStamp = combineDateAndTime(
+      values.scheduledDate,
+      values.scheduledTime
+    );
     if (timeStamp) {
       dispatch(
         createCallAction({
           is_call_private: true,
           scheduled_at: timeStamp,
-          member_emails: callMember,
+          member_emails: [values.callMember],
         })
       );
     }
     handleClose(false);
+    resetForm();
   };
+
   return (
     <Dialog open={open} onClose={handleClose} maxWidth={'xl'}>
       <DialogTitle>Schedule Meetings</DialogTitle>
       <DialogContent>
         <div className='h-[400px] w-[600px]'>
-          <TextField
-            label='Topic'
-            value={topic}
-            onChange={handleTopicChange}
-            fullWidth
-            margin='dense'
-          />
-          <div style={{ marginTop: '20px', display: 'flex', gap: '100px' }}>
-            <div>
-              {' '}
-              <label>Date</label>
-              <Datetime
-                inputProps={{
-                  style: {
-                    border: isFocused
-                      ? '2px solid blue'
-                      : '2px solid #0000003B',
-                    borderRadius: '4px',
-                    padding: '16.5px',
-                    outline: 'none',
-                  },
-                  onFocus: () => {
-                    setIsFocused(true);
-                  },
-
-                  onBlur: () => {
-                    setIsFocused(false);
-                  },
-                }}
-                // input={false}
-                onChange={handleScheduledDateChange}
-                value={scheduledDate}
-                dateFormat='DD/MM/YYYY'
-                // updateOnView='time'
-                timeFormat={false}
-                closeOnSelect={true}
-              />
-            </div>
-            <div>
-              <label>Time</label>
-              <Datetime
-                inputProps={{
-                  style: {
-                    border: isFocused
-                      ? '2px solid blue'
-                      : '2px solid #0000003B',
-                    borderRadius: '4px',
-                    padding: '16.5px',
-                    outline: 'none',
-                  },
-                  onFocus: () => {
-                    setIsFocused(true);
-                  },
-
-                  onBlur: () => {
-                    setIsFocused(false);
-                  },
-                }}
-                // input={false}
-                onChange={handleScheduledTimeChange}
-                value={scheduledTime}
-                dateFormat={false}
-                closeOnSelect={true}
-              />
-            </div>
-          </div>
-          <div
-            style={{
-              marginTop: '30px',
-              display: 'flex',
-              alignItems: 'end',
-              gap: '10px',
-            }}
+          {/* Formik wrapper for the entire form */}
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
           >
-            <TextField
-              label='Add Call Member'
-              value={currentCallMember}
-              onChange={handleCallMemberChange}
-              fullWidth
-              margin='dense'
-            />
-            <Button
-              style={{
-                marginBottom: '6px',
-              }}
-              variant='contained'
-              onClick={validateAndAddCallMember}
-            >
-              Add
-            </Button>
-          </div>
-          <AttendeesList attendees={callMember} />
+            {({
+              setFieldValue,
+              setFieldTouched,
+              validateField,
+              values,
+              errors,
+              touched,
+            }) => (
+              <Form>
+                {/* Topic Field */}
+                <Field
+                  as={TextField}
+                  name='topic'
+                  label='Topic'
+                  fullWidth
+                  margin='dense'
+                  error={touched.topic && !!errors.topic}
+                  helperText={<ErrorMessage name='topic' />}
+                />
+
+                {/* Date and Time Pickers */}
+                <div
+                  style={{ marginTop: '20px', display: 'flex', gap: '100px' }}
+                >
+                  <div>
+                    <label>Date</label>
+                    <Datetime
+                      inputProps={{
+                        style: {
+                          border: '2px solid #0000003B',
+                          borderRadius: '4px',
+                          padding: '16.5px',
+                          outline: 'none',
+                        },
+                      }}
+                      value={values.scheduledDate}
+                      dateFormat='DD/MM/YYYY'
+                      timeFormat={false}
+                      closeOnSelect={true}
+                      onChange={(date) => {
+                        if (date instanceof Date) {
+                          setFieldValue('scheduledDate', date);
+                        } else if (
+                          typeof date === 'object' &&
+                          'toDate' in date
+                        ) {
+                          setFieldValue('scheduledDate', date.toDate());
+                        }
+                      }}
+                    />
+                    <ErrorMessage
+                      name='scheduledDate'
+                      component='div'
+                      className='error'
+                    />
+                  </div>
+                  <div>
+                    <label>Time</label>
+                    <Datetime
+                      inputProps={{
+                        style: {
+                          border: '2px solid #0000003B',
+                          borderRadius: '4px',
+                          padding: '16.5px',
+                          outline: 'none',
+                        },
+                      }}
+                      value={values.scheduledTime}
+                      dateFormat={false}
+                      timeFormat='HH:mm'
+                      closeOnSelect={true}
+                      onChange={(time) => {
+                        if (time instanceof Date) {
+                          setFieldValue('scheduledTime', time);
+                        } else if (
+                          typeof time === 'object' &&
+                          'toDate' in time
+                        ) {
+                          setFieldValue('scheduledTime', time.toDate());
+                        }
+                      }}
+                    />
+                    <ErrorMessage
+                      name='scheduledTime'
+                      component='div'
+                      className='error'
+                    />
+                  </div>
+                </div>
+
+                {/* Call Member Field */}
+                <div
+                  style={{
+                    marginTop: '30px',
+                    display: 'flex',
+                    alignItems: 'start',
+                    gap: '10px',
+                  }}
+                >
+                  <Field
+                    as={TextField}
+                    name='callMember'
+                    label='Add Call Member'
+                    fullWidth
+                    margin='dense'
+                    error={touched.callMember && !!errors.callMember}
+                    helperText={<ErrorMessage name='callMember' />}
+                  />
+                  <Button
+                    style={{ marginTop: '10px' }}
+                    variant='contained'
+                    onClick={async () => {
+                      // Mark the field as touched and trigger validation
+                      setFieldTouched('callMember', true);
+                      const isValid = await validateField('callMember');
+
+                      if (!errors.callMember) {
+                        dispatch(isUserEmailAction(values.callMember)); // Validate email in the system
+
+                        // If valid and email is correct, add to the list
+                        if (!isLoading && isEmail) {
+                          setFieldValue(
+                            'callMember',
+                            '' // clear the field after adding
+                          );
+                        }
+                      }
+                    }}
+                  >
+                    Add
+                  </Button>
+                </div>
+
+                {/* Attendees List */}
+                <AttendeesList attendees={[values.callMember]} />
+
+                <Button
+                  variant='contained'
+                  type='submit'
+                  style={{ marginTop: '20px' }}
+                >
+                  Schedule Meet
+                </Button>
+              </Form>
+            )}
+          </Formik>
         </div>
-        <Button variant='contained' onClick={onClick}>
-          Schedule Meet
-        </Button>
       </DialogContent>
     </Dialog>
   );
 };
+
 export default memo(ScheduleCallModal);
