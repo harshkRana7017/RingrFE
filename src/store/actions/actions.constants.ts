@@ -25,6 +25,11 @@ export enum AuthActionType {
   RESET_PASSWORD = 'auth/reset-password',
   RESET_PASSWORD_COMPLETED = 'auth/reset-password/completed',
   RESET_PASSWORD_ERROR = 'auth/reset-password/error',
+
+  // Is User Email
+  IS_USER_EMAIL = 'auth/is-user-email',
+  IS_USER_EMAIL_COMPLETED = 'auth/is-user-email/completed',
+  IS_USER_EMAIL_ERROR = 'auth/is-user-email/error',
 }
 
 // Call

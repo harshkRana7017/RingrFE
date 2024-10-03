@@ -1,16 +1,21 @@
-import React, { FC, memo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { FC, memo, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { callsSelector } from 'store/Selectors/CallSelector';
 import ScheduledCallCard from './ScheduledCallCard';
+import { getScheduledCallsAction } from 'store/actions/call.action';
 
 type ScheduledCallsPageProps = {};
 
 const ScheduledCallsPage: FC<ScheduledCallsPageProps> = (props) => {
+  const dispatch = useDispatch();
   const calls = useSelector(callsSelector);
+    useEffect(() => {
+      dispatch(getScheduledCallsAction());
+    }, []);
 
   return (
     <>
-    <h1 style={{fontSize:'30px'}}>Scheduled Calls</h1>
+      <h1 style={{ fontSize: '30px' }}>Scheduled Calls</h1>
       {calls.map((call) =>
         call.scheduled_at ? (
           <ScheduledCallCard

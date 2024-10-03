@@ -82,7 +82,7 @@ export const forgotPasswordErrorAction = (message: string) => ({
   payload: message,
 });
 
-//Reset Password Actions 
+//Reset Password Actions
 export const resetPasswordAction = (newPassword: string, token: string) => ({
   type: AuthActionType.RESET_PASSWORD,
   payload: { newPassword, token },
@@ -94,5 +94,21 @@ export const resetPasswordCompletedAction = () => ({
 
 export const resetPasswordErrorAction = (message: string) => ({
   type: AuthActionType.RESET_PASSWORD_ERROR,
+  payload: message,
+});
+
+// Is User Email
+export const isUserEmailAction = (email: string) => ({
+  type: AuthActionType.IS_USER_EMAIL,
+  payload: email,
+});
+
+export const isUserEmailCompletedAction = (isUser: boolean) => ({
+  type: AuthActionType.IS_USER_EMAIL_COMPLETED,
+  payload: isUser,
+});
+
+export const isUserEmailErrorAction = (message: string) => ({
+  type: AuthActionType.IS_USER_EMAIL_ERROR,
   payload: message,
 });
