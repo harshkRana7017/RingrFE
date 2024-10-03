@@ -6,11 +6,17 @@ import {
   TextField,
 } from '@mui/material';
 import { getTime } from 'date-fns';
-import React, { FC, memo, useState } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { isUserEmailAction } from 'store/actions/auth.action';
 import { createCallAction } from 'store/actions/call.action';
+import {
+  isUserEmailSelector,
+  isUserloadingSelector,
+} from 'store/Selectors/UserSelector';
+import AttendeesList from './AttendeeList';
 type ScheduleCallModalProps = {
   open: boolean;
   handleClose: (closE: boolean) => void;
@@ -22,13 +28,23 @@ const ScheduleCallModal: FC<ScheduleCallModalProps> = ({
 }) => {
   const dispatch = useDispatch();
   const [topic, setTopic] = useState('');
-  const [callMember, setCallMember] = useState('');
+  const [callMember, setCallMember] = useState<any[]>([]);
+  const [currentCallMember, setCurrentCallMember] = useState('');
   const [scheduledDate, setScheduledDate] = useState(new Date());
   const [scheduledTime, setScheduledTime] = useState(new Date());
   const [isFocused, setIsFocused] = useState(false);
+  const isEmail = useSelector(isUserEmailSelector);
+  const isLoading = useSelector(isUserloadingSelector);
 
   const handleTopicChange = (e: any) => setTopic(e.target.value);
-  const handleCallMemberChange = (e: any) => setCallMember(e.target.value);
+  const handleCallMemberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentCallMember(e.target.value);
+  };
+
+  const validateAndAddCallMember = () => {
+    dispatch(isUserEmailAction(currentCallMember));
+  };
+
   const handleScheduledDateChange = (date: any) => {
     setScheduledDate(new Date(date));
   };
@@ -53,6 +69,12 @@ const ScheduleCallModal: FC<ScheduleCallModalProps> = ({
     return null;
   };
 
+  useEffect(() => {
+    if (!isLoading && isEmail) {
+      setCallMember((prev) => [...prev, currentCallMember]);
+    }
+  }, [isEmail, isLoading]);
+
   const onClick = () => {
     const timeStamp = combineDateAndTime();
     if (timeStamp) {
@@ -60,7 +82,7 @@ const ScheduleCallModal: FC<ScheduleCallModalProps> = ({
         createCallAction({
           is_call_private: true,
           scheduled_at: timeStamp,
-          member_emails: [callMember],
+          member_emails: callMember,
         })
       );
     }
@@ -137,14 +159,32 @@ const ScheduleCallModal: FC<ScheduleCallModalProps> = ({
               />
             </div>
           </div>
-          <TextField
-            label='Add Call Member'
-            value={callMember}
-            onChange={handleCallMemberChange}
-            fullWidth
-            margin='dense'
-            style={{ marginTop: '30px' }}
-          />
+          <div
+            style={{
+              marginTop: '30px',
+              display: 'flex',
+              alignItems: 'end',
+              gap: '10px',
+            }}
+          >
+            <TextField
+              label='Add Call Member'
+              value={currentCallMember}
+              onChange={handleCallMemberChange}
+              fullWidth
+              margin='dense'
+            />
+            <Button
+              style={{
+                marginBottom: '6px',
+              }}
+              variant='contained'
+              onClick={validateAndAddCallMember}
+            >
+              Add
+            </Button>
+          </div>
+          <AttendeesList attendees={callMember} />
         </div>
         <Button variant='contained' onClick={onClick}>
           Schedule Meet

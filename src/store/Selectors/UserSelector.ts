@@ -7,3 +7,13 @@ export const userSelector = createSelector(
   userStore,
   (authState) => authState.user
 );
+
+export const isUserEmailSelector = createSelector(
+  userStore,
+  (authState) => authState.isUserEmail
+);
+
+export const isUserloadingSelector = createSelector(
+  userStore,
+  (authState) => authState.loading
+);

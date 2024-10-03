@@ -13,6 +13,8 @@ import {
   authSignupCompletedAction,
   authSignupErrorAction,
   forgotPasswordCompletedAction,
+  isUserEmailCompletedAction,
+  isUserEmailErrorAction,
 } from 'store/actions/auth.action';
 import { authService } from 'services/api-services/AuthService';
 import { localStorageService } from 'services/LocalStorageService';
@@ -31,6 +33,11 @@ interface LoginViaGoogleSagaPayloadType extends SagaPayloadType {
 interface ForgotPassSagaPayloadType extends SagaPayloadType {
   payload: forgotPassPayload;
 }
+
+interface IsUserEmailSagaPayloadType extends SagaPayloadType {
+  payload: string;
+}
+
 function* loginSaga(data: LoginSagaPayloadType): any {
   try {
     const response = yield call(authService.login, data.payload);
@@ -82,6 +89,17 @@ function* forgotPassWordSaga(data: ForgotPassSagaPayloadType): any {
   }
 }
 
+//Is User Email
+
+function* isUserEmailSaga(data: IsUserEmailSagaPayloadType): any {
+  try {
+    const response = yield call(authService.isEmailUser, data.payload);
+    yield put(isUserEmailCompletedAction(response));
+  } catch (e: any) {
+    yield put(isUserEmailErrorAction(e?.message));
+  }
+}
+
 function* authSaga() {
   yield all([
     takeLatest(AuthActionType.LOGIN, loginSaga),
@@ -89,6 +107,7 @@ function* authSaga() {
     takeLatest(AuthActionType.SIGNUP, signupSaga),
     takeLatest(AuthActionType.LOGIN_VIA_GOOGLE, loginViaGoogleSaga),
     takeLatest(AuthActionType.FORGOT_PASSWORD, forgotPassWordSaga),
+    takeLatest(AuthActionType.IS_USER_EMAIL, isUserEmailSaga),
   ]);
 }
 

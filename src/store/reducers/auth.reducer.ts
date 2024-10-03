@@ -8,6 +8,7 @@ export interface AuthState {
   userID?: number;
   loading?: boolean;
   error?: string;
+  isUserEmail?: boolean;
 }
 
 const initialState: AuthState = {};
@@ -19,6 +20,7 @@ export const authReducer: Reducer<AuthState> = (
 ) =>
   produce(state, (draft: AuthState) => {
     switch (action.type) {
+      case AuthActionType.IS_USER_EMAIL:
       case AuthActionType.SIGNUP:
       case AuthActionType.LOGIN_VIA_GOOGLE:
       case AuthActionType.LOGIN:
@@ -30,6 +32,11 @@ export const authReducer: Reducer<AuthState> = (
         draft.loading = false;
         break;
       }
+      case AuthActionType.IS_USER_EMAIL_COMPLETED: {
+        draft.loading = true;
+        draft.isUserEmail = action.payload;
+        break;
+      }
       case AuthActionType.LOGIN_VIA_GOOGLE_COMPLETED:
       case AuthActionType.LOGIN_COMPLETED:
       case AuthActionType.FETCH_ME_COMPLETED: {
@@ -39,6 +46,7 @@ export const authReducer: Reducer<AuthState> = (
         draft.error = undefined;
         break;
       }
+      case AuthActionType.IS_USER_EMAIL_ERROR:
       case AuthActionType.LOGIN_VIA_GOOGLE_ERROR:
       case AuthActionType.SIGNUP_ERROR:
       case AuthActionType.LOGIN_ERROR:
@@ -47,6 +55,7 @@ export const authReducer: Reducer<AuthState> = (
         draft.error = action.payload;
         break;
       }
+
       default:
         break;
     }

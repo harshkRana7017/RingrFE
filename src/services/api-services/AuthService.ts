@@ -29,6 +29,10 @@ class AuthService {
   async forgotPass(data: forgotPassPayload): Promise<{}> {
     return baseApiService.post('/forgot-password', data);
   }
+
+  async isEmailUser(email: string): Promise<Boolean> {
+    return baseApiService.get(`/is_email_user/${email}`);
+  }
 }
 
 export const authService = AuthService.getInstance();
