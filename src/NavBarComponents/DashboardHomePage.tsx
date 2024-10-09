@@ -31,6 +31,35 @@ const DashboardPage: React.FC = () => {
   const [callInProgress, setCallInProgress] = useState(false);
   const [timer, setTimer] = useState(0);
   const [showDateSelector, setShowDateSelector] = useState(false);
+  const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
+
+  async function connectWebSocket() {
+    const auth_token = localStorageService.getAuthToken();
+    const wsUrl = `ws://localhost:8000/ws?token=${auth_token}`;
+    const socket = new WebSocket(wsUrl);
+    setWebSocket(socket);
+
+    socket.onopen = () => {
+      console.log('Connected to the signaling server');
+      startCall();
+    };
+
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      // Handle signaling messages
+    };
+
+    socket.onclose = () => {
+      console.log('Disconnected from the signaling server');
+    };
+  }
+
+  async function endWebSocketConnection() {
+    endCall();
+    if (webSocket) {
+      webSocket.close();
+    }
+  }
 
   const startCall = () => {
     dispatch(
@@ -102,14 +131,14 @@ const DashboardPage: React.FC = () => {
         <div className='flex space-x-4'>
           {!callInProgress ? (
             <Button
-              onClick={startCall}
+              onClick={connectWebSocket}
               className='bg-teal text-dark-bg py-2 px-6 rounded-md shadow-medium hover:bg-teal/80 transition duration-300'
             >
               Start Ring
             </Button>
           ) : (
             <Button
-              onClick={endCall}
+              onClick={endWebSocketConnection}
               className='bg-red-500 text-white py-2 px-6 rounded-md shadow-medium hover:bg-red-600 transition duration-300'
             >
               End Ring
