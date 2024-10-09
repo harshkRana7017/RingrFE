@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 type AttendeesListType = {
   attendees: string[];
 };
@@ -10,6 +10,7 @@ const AttendeesList: FC<AttendeesListType> = ({ attendees }) => {
   const toggleAttendees = () => {
     setShowAttendees((prevShow) => !prevShow);
   };
+
 
   return (
     <div>
